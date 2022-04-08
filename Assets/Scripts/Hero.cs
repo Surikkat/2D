@@ -7,23 +7,23 @@ public class Hero : MonoBehaviour
     [SerializeField] private float speed = 3f;
     [SerializeField] private int lives = 5;
     [SerializeField] private float jumpForce = 15f;
-    //private bool isGrounded = false;
+    private bool isGrounded = false;
 
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
-    //private Animator anim;
+    private Animator anim;
 
-    //private States State 
-    //{
-        //get { return (States)anim.GetInteger("state"); }
-        //set { anim.SetInteger("state", (int)value); }
-    //}
+    private States State 
+    {
+        get { return (States)anim.GetInteger("state"); }
+        set { anim.SetInteger("state", (int)value); }
+    }
 
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        //anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
         sprite = GetComponentInChildren<SpriteRenderer>();
     }
 
@@ -34,10 +34,10 @@ public class Hero : MonoBehaviour
 
     private void Update()
     {
-        //if (isGrounded)
-        //{
-            //State = States.Idle;
-        //}
+        if (isGrounded)
+        {
+            State = States.Idle;
+        }
         if (Input.GetButton("Horizontal"))
         {
             Run();
@@ -50,16 +50,16 @@ public class Hero : MonoBehaviour
 
     private void Run()
     {
-        //if (isGrounded)
-        //{
-            //State = States.Run;
-        //}
+        if (isGrounded)
+        {
+            State = States.Run;
+        }
 
         Vector3 dir = transform.right * Input.GetAxis("Horizontal");
 
         transform.position = Vector3.MoveTowards(transform.position, transform.position + dir, speed * Time.deltaTime);
 
-        //sprite.flipX = dir.x < 0.0f;
+        sprite.flipX = dir.x < 0;
     }
 
     private void Jump()
@@ -70,18 +70,18 @@ public class Hero : MonoBehaviour
     private void CheckGround()
     {
         Collider2D[] collider = Physics2D.OverlapCircleAll(transform.position, 0.3f);
-        //isGrounded = collider.Length > 1;
+        isGrounded = collider.Length > 1;
 
-        //if (!isGrounded)
-        //{
-            //State = States.Jump;
-        //}
+        if (!isGrounded)
+        {
+            State = States.Jump;
+        }
     }
 }
 
-//public enum States
-//{
-    //Idle,
-    //Jump,
-    //Run
-//}
+public enum States
+{
+    Idle,
+    Run,
+    Jump
+}
