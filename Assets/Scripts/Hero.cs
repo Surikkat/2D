@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hero : MonoBehaviour
+public class Hero : Entity
 {
     [SerializeField] private float speed = 3f;
     [SerializeField] private int lives = 5;
@@ -12,6 +12,8 @@ public class Hero : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
     private Animator anim;
+
+    public static Hero Instance { get; set; }
 
     private States State 
     {
@@ -25,6 +27,7 @@ public class Hero : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         sprite = GetComponentInChildren<SpriteRenderer>();
+        Instance = this;
     }
 
     private void FixedUpdate()
@@ -76,6 +79,12 @@ public class Hero : MonoBehaviour
         {
             State = States.Jump;
         }
+    }
+
+    public override void GetDamage()
+    {
+        lives -= 1;
+        Debug.Log(lives);
     }
 }
 
